@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
+  var current = 5;
 }
 
 class MyHomePage extends StatelessWidget {
@@ -36,9 +36,51 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('A random idea:'),
-          Text(appState.current.asLowerCase),
+          Expanded(
+            child: AnimatedContainer(
+              duration: Duration(seconds: 2),
+              curve: Curves.bounceInOut,
+              height: 100,
+              decoration: ShapeDecoration(
+                gradient: RadialGradient(colors: [Colors.blue, Colors.black]),
+                // shape: RoundedRectangleBorder(),
+                shape: StarBorder(points: appState.current.toDouble()),
+                // shape: CircleBorder(eccentricity: 0.3),
+              ),
+            ),
+          ),
+          // ↓ Add this.
+          ElevatedButton(
+            onPressed: () {
+              appState.current += 1;
+              appState.notifyListeners();
+              print('button pressed!');
+            },
+            child: Text('Next'),
+          ),
+
+          ElevatedButton(
+            onPressed: appState.current > 7
+                ? () {
+                    appState.current -= 5;
+                    appState.notifyListeners();
+                    print('button pressed!');
+                  }
+                : null,
+            child: Text('Less'),
+          ),
+          ElevatedButton(
+            onPressed: appState.current > 2
+                ? () {
+                    appState.current -= 1;
+                    appState.notifyListeners();
+                    print('button pressed!');
+                  }
+                : null,
+            child: Text('Little less'),
+          ),
         ],
       ),
     );
